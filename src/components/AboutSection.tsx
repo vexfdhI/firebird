@@ -116,7 +116,7 @@ const AboutSection: React.FC = () => {
               </h2>
               <div className="space-y-6 text-gray-700 leading-relaxed">
                 <p className="text-base">
-                  At the heart of this innovation is Pravin Yadav, the lead developer and founder 
+                  In this innovation is Pravin Yadav, the lead developer and founder 
                   driving force behind the app's design, functionality, and backend integration. 
                   Working alongside Brandi Johnson, the visionary principal of Jack E. Singley 
                   Academy, the two have elevated this initiative to become a model for real-world, 
@@ -124,7 +124,7 @@ const AboutSection: React.FC = () => {
                 </p>
                 
                 <p className="text-base">
-                  Also supported by student developer Pavitr Kunadia and a committed development 
+                  Also supported by student developers like Alan Rivera and Pavitr Kunadia and a committed development 
                   team, Firebird Café is a shining example of what happens when students are 
                   empowered to lead, create, and build solutions that leave a lasting impact.
                 </p>
