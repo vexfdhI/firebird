@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import './App.css';
+import { useCart } from './hooks/useCart';
 import Navigation from './components/Navigation';
 import Hero from './components/Hero';
 import MenuSection from './components/MenuSection';
@@ -8,10 +9,14 @@ import ContentGrid from './components/ContentGrid';
 import InteractiveMenu from './components/InteractiveMenu';
 import CreatorsSection from './components/CreatorsSection';
 import AboutSection from './components/AboutSection';
+import CartIcon from './components/CartIcon';
+import CheckoutPage from './components/CheckoutPage';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentSection, setCurrentSection] = useState('home');
+  const [showCheckout, setShowCheckout] = useState(false);
+  const { cart, addToCart, updateQuantity, removeFromCart, clearCart } = useCart();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -20,6 +25,25 @@ function App() {
   const navigateToSection = (section: string) => {
     setCurrentSection(section);
     setIsMenuOpen(false);
+    setShowCheckout(false);
+  };
+
+  const handleCartClick = () => {
+    setShowCheckout(true);
+  };
+
+  const handleCheckoutBack = () => {
+    setShowCheckout(false);
+  };
+
+  const handleOrderComplete = () => {
+    clearCart();
+    setShowCheckout(false);
+    setCurrentSection('home');
+    // Show success message
+    setTimeout(() => {
+      alert('Order placed successfully! You will receive a confirmation email shortly.');
+    }, 500);
   };
 
   const renderCurrentSection = () => {
@@ -38,7 +62,13 @@ function App() {
         );
       case 'menu':
         return (
-          <InteractiveMenu />
+          <InteractiveMenu 
+            cart={cart}
+            addToCart={addToCart}
+            updateQuantity={updateQuantity}
+            removeFromCart={removeFromCart}
+            clearCart={clearCart}
+          />
         );
       case 'staff':
         return (
@@ -91,6 +121,17 @@ function App() {
     }
   };
 
+  // Show checkout page if requested
+  if (showCheckout) {
+    return (
+      <CheckoutPage
+        cart={cart}
+        onBack={handleCheckoutBack}
+        onOrderComplete={handleOrderComplete}
+      />
+    );
+  }
+
   return (
     <div className="App">
       {/* Header */}
@@ -126,6 +167,12 @@ function App() {
       <main>
         {renderCurrentSection()}
       </main>
+
+      {/* Floating Cart Icon */}
+      <CartIcon 
+        cart={cart}
+        onClick={handleCartClick}
+      />
     </div>
   );
 }

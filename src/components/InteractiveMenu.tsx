@@ -1,16 +1,23 @@
-import React, { useState } from 'react';
-import { ShoppingBag } from 'lucide-react';
-import { useCart } from '../hooks/useCart';
+import React from 'react';
 import { menuItems } from '../data/menuItems';
 import MenuGrid from './MenuGrid';
-import CartSidebar from './CartSidebar';
-import CheckoutForm from './CheckoutForm';
+import { CartState, MenuItem } from '../types/menu';
 
-const InteractiveMenu: React.FC = () => {
-  const { cart, addToCart, updateQuantity, removeFromCart, clearCart } = useCart();
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+interface InteractiveMenuProps {
+  cart: CartState;
+  addToCart: (item: MenuItem, quantity: number) => void;
+  updateQuantity: (itemId: string, quantity: number) => void;
+  removeFromCart: (itemId: string) => void;
+  clearCart: () => void;
+}
 
+const InteractiveMenu: React.FC<InteractiveMenuProps> = ({ 
+  cart, 
+  addToCart, 
+  updateQuantity, 
+  removeFromCart, 
+  clearCart 
+}) => {
   const handleAddToCart = (item: any, quantity: number) => {
     addToCart(item, quantity);
     // Show brief success feedback
@@ -19,31 +26,8 @@ const InteractiveMenu: React.FC = () => {
     }, 100);
   };
 
-  const handleCheckout = () => {
-    setIsCartOpen(false);
-    setIsCheckoutOpen(true);
-  };
-
-  const handleOrderComplete = () => {
-    clearCart();
-    alert('Order placed successfully! You will receive a confirmation email shortly.');
-  };
-
   return (
     <section className="min-h-screen bg-gray-50">
-      {/* Fixed Cart Button */}
-      {cart.itemCount > 0 && (
-        <button
-          onClick={() => setIsCartOpen(true)}
-          className="fixed bottom-6 right-6 bg-black text-white p-4 rounded-full shadow-lg hover:bg-gray-800 transition-all duration-300 z-30 flex items-center space-x-2"
-        >
-          <ShoppingBag size={24} />
-          <span className="bg-white text-black px-2 py-1 rounded-full text-sm font-bold">
-            {cart.itemCount}
-          </span>
-        </button>
-      )}
-
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 min-h-screen">
           {/* Left Content - Menu Description */}
@@ -117,25 +101,6 @@ const InteractiveMenu: React.FC = () => {
           </div>
         </div>
       </div>
-
-      {/* Cart Sidebar */}
-      <CartSidebar
-        cart={cart}
-        isOpen={isCartOpen}
-        onClose={() => setIsCartOpen(false)}
-        onUpdateQuantity={updateQuantity}
-        onRemoveItem={removeFromCart}
-        onClearCart={clearCart}
-        onCheckout={handleCheckout}
-      />
-
-      {/* Checkout Form */}
-      <CheckoutForm
-        cart={cart}
-        isOpen={isCheckoutOpen}
-        onClose={() => setIsCheckoutOpen(false)}
-        onOrderComplete={handleOrderComplete}
-      />
     </section>
   );
 };
